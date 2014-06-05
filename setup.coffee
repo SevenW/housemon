@@ -18,6 +18,7 @@ circuits.main =
 # init circuit for HouseMon, which starts its own http server.
 circuits.init =
   gadgets: [
+    { name: "reload", type: "WSLiveReload" } # needed if using node in dev mode
     { name: "mqtt", type: "MQTTServer" }
 		{ name: "replay", type: "replay" }
     { name: "sub", type: "DataSub" }

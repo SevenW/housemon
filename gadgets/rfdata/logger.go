@@ -64,6 +64,6 @@ func (w *Logger) logOneLine(asof time.Time, text, port string) {
 	// 	L 01:02:03.537 usb-A40117UK OK 9 25 54 66 235 61 210 226 33 19
 	hour, min, sec := asof.Clock()
 	line := fmt.Sprintf("L %02d:%02d:%02d.%03d %s %s\n",
-		hour, min, sec, jeebus.TimeToMs(asof) % 1000, port, text)
+		hour, min, sec, jeebus.TimeToMs(asof)%1000, port, text)
 	w.fd.WriteString(line)
 }

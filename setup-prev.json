@@ -6,6 +6,10 @@
                 "type": "HTTPServer"
             },
             {
+                "name": "reload",
+                "type": "WSLiveReload"
+            },
+            {
                 "name": "init",
                 "type": "init"
             }
@@ -105,10 +109,6 @@
             {
                 "data": "sensor/",
                 "to": "sub2.In"
-            },
-            {
-                "data": "1m",
-                "to": "aggr.Step"
             }
         ],
         "labels": [

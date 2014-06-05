@@ -35,6 +35,10 @@
     "init": {
         "gadgets": [
             {
+                "name": "reload",
+                "type": "WSLiveReload"
+            },
+            {
                 "name": "mqtt",
                 "type": "MQTTServer"
             },
