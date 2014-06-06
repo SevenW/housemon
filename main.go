@@ -31,7 +31,7 @@ SETUP_FILE  = ./setup.json
 func main() {
 	flag.Parse() // required, to set up the proper glog configuration
 	flow.LoadConfig(defaults, *config)
-	flow.DontPanic()
+	flow.DontPanic(nil)
 
 	// register more definitions from a JSON-formatted setup file, if specified
 	if s := flow.Config["SETUP_FILE"]; s != "" {
