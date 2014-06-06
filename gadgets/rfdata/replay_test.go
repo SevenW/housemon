@@ -8,11 +8,12 @@ import (
 
 type MockOutput int
 
-func (c *MockOutput) Send(m flow.Message) {
+func (c *MockOutput) Send(m flow.Message) error {
 	if *c < 7 {
 		fmt.Printf("%T: %v\n", m, m)
 		(*c)++
 	}
+	return nil
 }
 
 func (c *MockOutput) Disconnect() {}
