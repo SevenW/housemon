@@ -2,14 +2,16 @@
   .large-12.columns
     h1 Demo
 
-    table(cellpadding=10)
-      tr
-        td
-          button(ng-click='echoTest()') Echo Test
-        td
-          button(ng-click='dbKeysTest()') DB Keys
-        td
-          button(ng-click='mqttTest()') MQTT Subscribe
-      tr
-        td(colspan=3)
-          | {{message}} &nbsp;
+    table.pure-table
+      thead
+        tr
+          td
+            button(ng-click='echoTest()') Echo Test
+          td
+            button(ng-click='dbKeysTest()') DB Keys
+          td
+            button(ng-click='mqttTest()') MQTT Subscribe
+      tbody
+        tr
+          td(colspan=3)
+            | {{message}} &nbsp;

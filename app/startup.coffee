@@ -1,7 +1,6 @@
 ng = angular.module 'myApp', [
   'ui.router'
   'ngAnimate'
-  'mm.foundation'
 ]
 
 ng.value 'appInfo',

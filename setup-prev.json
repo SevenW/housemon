@@ -6,10 +6,6 @@
                 "type": "HTTPServer"
             },
             {
-                "name": "reload",
-                "type": "WSLiveReload"
-            },
-            {
                 "name": "init",
                 "type": "init"
             }
@@ -38,6 +34,10 @@
     },
     "init": {
         "gadgets": [
+            {
+                "name": "reload",
+                "type": "WSLiveReload"
+            },
             {
                 "name": "mqtt",
                 "type": "MQTTServer"

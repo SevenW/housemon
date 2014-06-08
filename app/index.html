@@ -2,50 +2,50 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <style>[ng-cloak] { display: none; }</style>
     <title>JeeBus</title>
-    <link rel="stylesheet" href="/base/vendor/foundation/css/foundation.css">
-    <link rel="stylesheet" href="/base/vendor/fontawesome-clean/font-awesome.css">
+    <link rel="stylesheet" href="/base/vendor/pure/pure-min.css">
+    <link rel="stylesheet" href="/base/pure-side-menu.css">
+    <link rel="stylesheet" href="/base/vendor/fontawesome/css/font-awesome.css">
     <link rel="stylesheet" href="/style.css">
   </head>
   <body ng-cloak ng-app="myApp">
-    <nav ng-controller="NavCtrl" class="top-bar">
-      <ul class="title-area">
-        <li class="name">
-          <h1><a ng-href="{{appInfo.home}}"><img src="/base/logo.png" height="22" width="22">&nbsp; {{appInfo.name}}</a></h1>
-        </li>
-        <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
-      </ul>
-      <section class="top-bar-section">
-        <ul class="left">
-          <li ng-repeat="nav in navbar" class="myNav"><a ng-href="{{nav.route}}">{{nav.title}}</a></li>
-          <li class="divider"></li>
-        </ul>
-        <ul class="right">
-          <li class="myNav"><a href="/admin">Admin</a></li>
-        </ul>
-      </section>
-    </nav>
-    <div ui-view></div>
-    <div class="row">
-      <div class="large-3 columns">
-        <p class="secondary label">Version {{appInfo.version}}</p>
+    <div id="layout"><a id="menuLink" href="#menu" name="menuLink" class="menu-link">
+        <!-- Hamburger icon--><span></span></a>
+      <div id="menu">
+        <div ng-controller="NavCtrl" class="pure-menu pure-menu-open"><a ng-href="{{appInfo.home}}" class="pure-menu-heading">{{appInfo.name}}</a>
+          <ul>
+            <li ng-repeat="nav in navbar"><a ng-href="{{nav.route}}">{{nav.title}}</a></li>
+            <li><a href="/admin">Admin</a></li>
+          </ul>
+        </div>
       </div>
-      <div class="large-3 columns">
-        <p class="secondary label">Server {{serverStatus}}</p>
+      <div id="main">
+        <div class="content">
+          <div ui-view></div>
+          <div class="pure-g">
+            <div class="pure-u-1-2">
+              <p class="secondary label">Version {{appInfo.version}}</p>
+            </div>
+            <div class="pure-u-1-2">
+              <p class="secondary label">Server {{serverStatus}}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <script src="/base/vendor/angular/angular.js"></script>
+    <script src="/base/vendor/angular/angular.min.js"></script>
     <script>console.log('BEFORE vendor');</script>
-    <script src="/base/vendor/angular-ui-router.min.js"></script>
+    <script src="/base/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="/base/vendor/angular-animate/angular-animate.min.js"></script>
-    <script src="/base/vendor/angular-foundation/mm-foundation-tpls.min.js"></script>
     <script src="/base/vendor/d3/d3.min.js"></script>
     <script src="/startup.js"></script>
     <script src="/base/jeebus.js"></script>
     <script src="/base/nav.js"></script>
+    <script src="/base/pure-ui.js"></script>
     <script>console.log('AFTER scripts');</script>
-    <script src="/base/vendor/ee3.js"></script>
+    <script src="/base/ee3.js"></script>
     <script src="/demo/demo.js"></script>
     <script src="/status/status.js"></script>
     <script src="/data/data.js"></script>

@@ -1,52 +1,49 @@
 
-<div class="row">
-  <div class="large-4 columns">
-    <h3>Data for: {{table}}</h3>
+<div class="pure-g">
+  <div class="pure-u-1-2">
+    <h1>Data for: {{table}}</h1>
   </div>
-  <div class="large-2 columns">
-    <h3>
+  <div class="pure-u-1-4">
+    <h1>
       <!-- for vertical alignment-->
-    </h3>
+    </h1>
     <select ng-model="table" ng-options="k as k for (k,v) in tables.keys" ng-change="changeTable(table)"></select>
   </div>
-  <div class="large-2 columns">
-    <h3>
+  <div class="pure-u-1-4">
+    <h1>
       <!-- for vertical alignment-->
-    </h3>
+    </h1>
     <input type="text" ng-model="query" placeholder="Search..."/>
   </div>
-  <div class="large-4 columns"></div>
 </div>
-<div class="row">
-  <div class="large-8 columns">
-    <table>
-      <tr>
-        <th ng-repeat="c in colInfo">{{columns.get(c).name}}</th>
-      </tr>
-      <tr ng-repeat="r in data.rows | filter:query" ng-click="editRow(r)" class="hover">
-        <td ng-repeat="c in colInfo">{{r[c]}}</td>
-      </tr>
+<div class="pure-g">
+  <div class="pure-u-1-2">
+    <table class="pure-table">
+      <thead>
+        <tr>
+          <th ng-repeat="c in colInfo">{{columns.get(c).name}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="r in data.rows | filter:query" ng-click="editRow(r)" class="hover">
+          <td ng-repeat="c in colInfo">{{r[c]}}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
-  <div class="large-4 columns">
-    <form ng-show="cursor">
-      <div ng-repeat="c in colInfo" class="row">
-        <div class="large-4 columns">
+  <div class="pure-u-1-2">
+    <form ng-show="cursor" class="pure-form pure-form-stacked">
+      <fieldset>
+        <div ng-repeat="c in colInfo" class="pure-control-group">
           <label class="right inline">{{columns.get(c).name}}</label>
-        </div>
-        <div class="large-8 columns">
           <input type="text" ng-model="cursor[c]"/>
         </div>
-      </div>
-      <div class="row">
-        <div class="large-4 columns">
-          <p></p>
+        <div class="pure-controls"><a ng-click="cursor=null" class="pure-button">Clear</a>
+          <label class="pure-checkbox">
+            <input type="checkbox" ng-model="allowDelete"/>&nbsp;<a ng-click="deleteRow()" class="pure-button">Delete</a>
+          </label>
         </div>
-        <div class="large-4 columns"><a ng-click="cursor=null">Clear</a></div>
-        <div class="large-4 columns">
-          <input type="checkbox" ng-model="allowDelete"/><a ng-click="deleteRow()" class="right">Delete</a>
-        </div>
-      </div>
+      </fieldset>
     </form>
   </div>
 </div>
