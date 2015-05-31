@@ -3,7 +3,7 @@
 /node_modules/
 /storage/
 /uploads/
-/briqs/nodeMap-local.coffee
+#/briqs/nodeMap-local.coffee
 /ts-logger/
 *.out
 *.err

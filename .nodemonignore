@@ -15,3 +15,5 @@
 /dump.rdb
 /docs/*
 /briqs.json.template
+/ts-logger/*
+/*.log
