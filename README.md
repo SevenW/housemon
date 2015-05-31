@@ -1,4 +1,4 @@
-# HouseMon
+# HouseMon 0.70CL
 
 Real-time home monitoring and automation.
 
