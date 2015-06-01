@@ -5,7 +5,7 @@
 /uploads/
 #/briqs/nodeMap-local.coffee
 /ts-logger/
-/tP1logger/
+/P1-logger/
 *.out
 *.err
 *.log

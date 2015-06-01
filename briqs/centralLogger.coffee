@@ -602,6 +602,8 @@ class centralLogger extends serialport.SerialPort
               
               #info.buffer.writeUInt16BE words[2] - ts, 13
               state.emit 'rf12.packet', info, ainfo[info.id]
+              console.log "ainfo[info.id]"
+              console.log ainfo[info.id]
             else #something other than 'OK...'
               match = /^ -> (\d+) b/.exec data   #bytes sent?
               if match #we have results of a send from the mcu in the format ' -> x b' where x is bytes.

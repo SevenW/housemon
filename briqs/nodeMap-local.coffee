@@ -24,6 +24,7 @@ exports.rf12nodes =
     4: 'bmp085SQ'
     22: 'weatherStation'
     23: 'weatherStation'
+    30: 'p1scannerCL'
     31: 'clTime'
 
 # devices are mapped to RF12 configs, since that is not present in log files
@@ -49,4 +50,5 @@ exports.locations =
   'RF12:178:4': title: 'barometer'
   'RF12:178:22': title: 'zolder'
   'RF12:178:23': title: 'zolderOOK'
+  'RF12:178:30': title: 'P1 meter'
   'RF12:178:31': title: 'centrallogger time'
