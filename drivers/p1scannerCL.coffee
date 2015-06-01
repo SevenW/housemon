@@ -6,58 +6,70 @@ module.exports =
     ['PD', 'PE', 'PG']
 
   PD:
-    use1:
-      title: 'Elec usage - low'
+    evt1:
+      title: 'E verbruik - dal'
       unit: 'kWh'
       scale: 3
       min: 0
-    use2:
-      title: 'Elec usage - high'
+    evt2:
+      title: 'E verbruik - piek'
       unit: 'kWh'
       scale: 3
       min: 0
-    gen1:
-      title: 'Elec return - low'
+    elt1:
+      title: 'E levering - dal'
       unit: 'kWh'
       scale: 3
       min: 0
-    gen2:
-      title: 'Elec return - high'
+    elt2:
+      title: 'E levering - piek'
       unit: 'kWh'
       scale: 3
       min: 0
-    cuse1:
-      title: 'Cum Elec usage - low'
+    evdt1:
+      title: 'E dag verbruik - dal'
       unit: 'kWh'
       scale: 3
       min: 0
-    cuse2:
-      title: 'Cum Elec usage - high'
+    evdt2:
+      title: 'E dag verbruik - piek'
       unit: 'kWh'
       scale: 3
       min: 0
-    cgen1:
-      title: 'Cum Elec return - low'
+    eldt1:
+      title: 'E dag levering - dal'
       unit: 'kWh'
       scale: 3
       min: 0
-    cgen2:
-      title: 'Cum Elec return - high'
+    eldt2:
+      title: 'E dag levering - piek'
       unit: 'kWh'
       scale: 3
       min: 0
+    evd:
+      title: 'E dag verbruik - totaal'
+      unit: 'kWh'
+      scale: 3
+      min: 0
+    eld:
+      title: 'E dag levering - totaal'
+      unit: 'kWh'
+      scale: 3
+      min: 0
+    cnt:
+      title: 'P1 logs/dag'
 
   PE:
-    mode:
-      title: 'Elec tariff'
-    usew:
-      title: 'Elec usage now'
+    etrf:
+      title: 'E tarief'
+    epv:
+      title: 'P verbruik'
       unit: 'W'
       scale: -1
       min: 0
       max: 15000
-    genw:
-      title: 'Elec return now'
+    epl:
+      title: 'P levering'
       unit: 'W'
       scale: -1
       min: 0
@@ -65,7 +77,7 @@ module.exports =
 
   PG:
     gas:
-      title: 'Gas total'
+      title: 'G verbruik'
       unit: 'm3'
       scale: 3
       min: 0
@@ -79,20 +91,23 @@ module.exports =
     if type == 'PD'
       result =
         tag: 'PD'
-        cuse1: raw.readUInt32BE(3)
-        cuse2: raw.readUInt32BE(7)
-        cgen1: raw.readUInt32BE(11)
-        cgen2: raw.readUInt32BE(15)
-        use1: raw.readUInt32BE(19)
-        use2: raw.readUInt32BE(23)
-        gen1: raw.readUInt32BE(27)
-        gen2: raw.readUInt32BE(31)
+        evt1: raw.readUInt32BE(3)
+        evt2: raw.readUInt32BE(7)
+        elt1: raw.readUInt32BE(11)
+        elt2: raw.readUInt32BE(15)
+        evdt1: raw.readUInt32BE(19)
+        evdt2: raw.readUInt32BE(23)
+        eldt1: raw.readUInt32BE(27)
+        eldt2: raw.readUInt32BE(31)
+        evd: raw.readUInt32BE(19) + raw.readUInt32BE(23)
+        evl: raw.readUInt32BE(27) + raw.readUInt32BE(31)
+        cnt: raw.readUInt16BE(35)
     else if type == 'PE'
       result =
         tag: 'PE'
-        usew: raw.readUInt32BE(3)
-        genw: raw.readUInt32BE(7)
-        mode: raw.readUInt8(11)
+        epv: raw.readUInt32BE(3)
+        epl: raw.readUInt32BE(7)
+        etrf: raw.readUInt8(11)
     else if type == 'PG'
       result =
         tag: 'PG'

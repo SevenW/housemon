@@ -19,7 +19,8 @@ P1_LOGGER_PATH = './P1-logger'
 fs.mkdir P1_LOGGER_PATH, ->
 
 getDateString = (now) ->
-  now.getUTCDate() + 100 * (now.getUTCMonth() + 1 + 100 * now.getUTCFullYear())
+  dateString = (now.getUTCDate() + 100 * (now.getUTCMonth() + 1 + 100 * now.getUTCFullYear())).toString()
+  dateString[0..3]+'-'+dateString[4..5]+'-'+dateString[6..7]
 
 dateFilename = (now) ->
   # construct the date value as 8 digits
@@ -28,7 +29,7 @@ dateFilename = (now) ->
   # then massage it as a string to produce a file name
   path = "#{P1_LOGGER_PATH}/#{y}"
   fs.mkdirSync path  unless fs.existsSync path # TODO laziness: sync calls
-  path + "/PE#{d}.log"
+  path + "/meteract-#{d}.log"
 
 yearFilename = (now, type) ->
   # construct the date value as 8 digits
@@ -36,17 +37,13 @@ yearFilename = (now, type) ->
   # then massage it as a string to produce a file name
   path = "#{P1_LOGGER_PATH}/#{y}"
   fs.mkdirSync path  unless fs.existsSync path # TODO laziness: sync calls
-  path + "/" + type + "#{y}.log"
+  path + "/" + type + "-#{y}.log"
 
     
 #exports.factory = class
 class P1Logger
   
   p1logger: (type, device, data) =>
-    console.log "log from P1logger"
-    console.log this
-    console.log @currDate
-    #@currDate = 20110101 if not @currDate?
     now = new Date
     msg = data
     # parse log string and add timestamp when missing
@@ -70,9 +67,7 @@ class P1Logger
         logdate = getDateString tsDate
         logyear = tsDate.getUTCFullYear()
         # 1234567890123 /dev/ttyAMC0 OK035523000012
-        log = "#{ts} #{device} #{msg}\n"
-        console.log logdate
-        console.log @currDate
+        #log = "#{ts} #{device} #{msg}\n"
         if logdate != @currDate
           @currDate = logdate 
           fs.close @fd_pe  if @fd_pe?
@@ -80,27 +75,41 @@ class P1Logger
         if logyear != @currYear
           @currYear = logyear 
           fs.close @fd_pd  if @fd_pd?
-          @fd_pd = fs.openSync yearFilename(tsDate, "PD"), 'a'
+          @fd_pd = fs.openSync "#{P1_LOGGER_PATH}/metersummary24.log", 'a'
           fs.close @fd_pg  if @fd_pg?
-          @fd_pg = fs.openSync yearFilename(tsDate, "PG"), 'a'
+          @fd_pg = fs.openSync yearFilename(tsDate, "meter-gas"), 'a'
+  
+        readings = msg[3..].split ','
+        
         if msg[0..1] is 'PD'
+          evt1 = (readings[0]/1000).toFixed 3
+          evt2 = (readings[1]/1000).toFixed 3
+          elt1 = (readings[2]/1000).toFixed 3
+          elt2 = (readings[3]/1000).toFixed 3
+          gdatum = readings[4]
+          gvt1 = (readings[5]/1000).toFixed 3
+          evdt1 = (readings[6]/1000).toFixed 3
+          evdt2 = (readings[7]/1000).toFixed 3
+          eldt1 = (readings[8]/1000).toFixed 3
+          eldt2 = (readings[9]/1000).toFixed 3
+          cnt = readings[10]
+          log = "#{ts}, #{evt1}, #{evt2}, #{elt1}, #{elt2}, #{gdatum}, #{gvt1}, #{evdt1}, #{evdt2}, #{eldt1}, #{eldt2}, #{cnt}\n"
           fs.write @fd_pd, log
         else if msg[0..1] is 'PE'
+          log = "#{ts}, #{(readings[0]/100).toFixed 2}, #{(readings[1]/100).toFixed 2}, #{readings[2]}\n"
           fs.write @fd_pe, log
         else if msg[0..1] is 'PG'
+          log = "#{ts}, #{readings[0]}, #{(readings[1]/1000).toFixed 3}\n"
           fs.write @fd_pg, log
         
         #publish event for processing by driver
-        readings = msg[3..].split ','
-        #console.log readings[0]
-        
         info = {} #standard rf12demo format
         info.recvid = 1
         info.group = 178
         info.recvid = 868
         info.id = 30 #use this node id for P1 meter readings
         if msg[0..1] is 'PD'
-          info.buffer = new Buffer 35
+          info.buffer = new Buffer 37
           info.buffer.writeUInt8 30, 0 #node id
           info.buffer.write msg[0..1], 1
           info.buffer.writeUInt32BE readings[0], 3
@@ -111,6 +120,7 @@ class P1Logger
           info.buffer.writeUInt32BE readings[7], 23
           info.buffer.writeUInt32BE readings[8], 27
           info.buffer.writeUInt32BE readings[9], 31
+          info.buffer.writeUInt16BE readings[10], 35
         if msg[0..1] is 'PE'
           info.buffer = new Buffer 12
           info.buffer.writeUInt8 30, 0 #node id
@@ -124,15 +134,10 @@ class P1Logger
           info.buffer.write msg[0..1], 1
           info.buffer.writeUInt32BE readings[1], 3
         state.emit 'rf12.packet', info, {} # ainfo[info.id]
-        #console.log "P1logger emitted event"
 
   constructor: ->
-    #@currDate = 20100101
     state.on 'incoming', @p1logger
     console.log 'P1Logger constructor called'     
-    #@currDate = 20100102
-    #console.log @currDate
-    #console.log this
           
   destroy: ->
     state.off 'incoming', @p1logger

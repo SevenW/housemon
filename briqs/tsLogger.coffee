@@ -101,8 +101,6 @@ exports.factory = class
   
   logger: (type, device, data) =>
     now = new Date
-    console.log "log from ts-logger"
-    console.log this
     # parse log string and add timestamp when missing
     if /^[0-9]{13} /.test data
       ts = parseInt data[0..12]
