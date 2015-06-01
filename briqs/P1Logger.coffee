@@ -11,30 +11,42 @@ exports.info =
     '/p1logger': './P1-logger'
 
 state = require '../server/state'
-p1fs = require 'fs'
+fs = require 'fs'
 
 console.log 'P1Logger main called'   
   
 P1_LOGGER_PATH = './P1-logger'
-p1fs.mkdir P1_LOGGER_PATH, ->
+fs.mkdir P1_LOGGER_PATH, ->
 
-p1getDateString = (now) ->
+getDateString = (now) ->
   now.getUTCDate() + 100 * (now.getUTCMonth() + 1 + 100 * now.getUTCFullYear())
 
-p1dateFilename = (now) ->
+dateFilename = (now) ->
   # construct the date value as 8 digits
   y = now.getUTCFullYear()
-  d = p1getDateString now
+  d = getDateString now
   # then massage it as a string to produce a file name
   path = "#{P1_LOGGER_PATH}/#{y}"
-  p1fs.mkdirSync path  unless p1fs.existsSync path # TODO laziness: sync calls
-  path + "/#{d}.txt"
+  fs.mkdirSync path  unless fs.existsSync path # TODO laziness: sync calls
+  path + "/PE#{d}.log"
+
+yearFilename = (now, type) ->
+  # construct the date value as 8 digits
+  y = now.getUTCFullYear()
+  # then massage it as a string to produce a file name
+  path = "#{P1_LOGGER_PATH}/#{y}"
+  fs.mkdirSync path  unless fs.existsSync path # TODO laziness: sync calls
+  path + "/" + type + "#{y}.log"
 
     
+#exports.factory = class
 class P1Logger
   
-  p1logger: (type, device, data) ->
-    @xcurrDate = 20100101 if @xcurrDate?
+  p1logger: (type, device, data) =>
+    console.log "log from P1logger"
+    console.log this
+    console.log @currDate
+    #@currDate = 20110101 if not @currDate?
     now = new Date
     msg = data
     # parse log string and add timestamp when missing
@@ -55,16 +67,28 @@ class P1Logger
         #1433026790149 /dev/CL1 PD:7911000,4138000,702000,1883000,150531000000,5302898,4944,0,6615,0,8636
         #console.log msg
         tsDate = new Date(ts)
-        logdate = p1getDateString tsDate
+        logdate = getDateString tsDate
+        logyear = tsDate.getUTCFullYear()
         # 1234567890123 /dev/ttyAMC0 OK035523000012
         log = "#{ts} #{device} #{msg}\n"
         console.log logdate
-        console.log @xcurrDate
-        if logdate != @xcurrDate
-          @xcurrDate = logdate 
-          p1fs.close @fd  if @fd?
-          @fd = p1fs.openSync p1dateFilename(tsDate), 'a'
-        #p1fs.write @fd, log
+        console.log @currDate
+        if logdate != @currDate
+          @currDate = logdate 
+          fs.close @fd_pe  if @fd_pe?
+          @fd_pe = fs.openSync dateFilename(tsDate), 'a'
+        if logyear != @currYear
+          @currYear = logyear 
+          fs.close @fd_pd  if @fd_pd?
+          @fd_pd = fs.openSync yearFilename(tsDate, "PD"), 'a'
+          fs.close @fd_pg  if @fd_pg?
+          @fd_pg = fs.openSync yearFilename(tsDate, "PG"), 'a'
+        if msg[0..1] is 'PD'
+          fs.write @fd_pd, log
+        else if msg[0..1] is 'PE'
+          fs.write @fd_pe, log
+        else if msg[0..1] is 'PG'
+          fs.write @fd_pg, log
         
         #publish event for processing by driver
         readings = msg[3..].split ','
@@ -103,14 +127,17 @@ class P1Logger
         #console.log "P1logger emitted event"
 
   constructor: ->
-    @xcurrDate = 20100101
+    #@currDate = 20100101
     state.on 'incoming', @p1logger
     console.log 'P1Logger constructor called'     
-    @xcurrDate = 20100101
-    console.log @xcurrDate
+    #@currDate = 20100102
+    #console.log @currDate
+    #console.log this
           
   destroy: ->
     state.off 'incoming', @p1logger
-    p1fs.close @fd  if @fd?
+    fs.close @fd_pd  if @fd_pd?
+    fs.close @fd_pe  if @fd_pe?
+    fs.close @fd_pg  if @fd_pg?
     
 exports.factory = P1Logger

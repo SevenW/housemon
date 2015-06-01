@@ -35,6 +35,7 @@ dateFilename = (now) ->
   path + "/#{d}.txt"
 
 
+
   
 tailFile = (fn) ->
   #find the last line to read the time stamp
@@ -95,10 +96,13 @@ exports.getLastTs = getLastTs
 #  # then massage it as a string to get the punctuation right
 #  digits.toString().replace /.(..)(..)(..)(...)/, '$1:$2:$3.$4'
 
-class tsLogger
+exports.factory = class
+#class tsLogger
   
-  logger: (type, device, data) ->
+  logger: (type, device, data) =>
     now = new Date
+    console.log "log from ts-logger"
+    console.log this
     # parse log string and add timestamp when missing
     if /^[0-9]{13} /.test data
       ts = parseInt data[0..12]
@@ -132,4 +136,4 @@ class tsLogger
     state.off 'incoming', @logger
     fs.close @fd  if @fd?
     
-exports.factory = tsLogger
+#exports.factory = tsLogger
