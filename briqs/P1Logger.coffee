@@ -98,6 +98,8 @@ class P1Logger
         else if msg[0..1] is 'PE'
           log = "#{ts}, #{(readings[0]/100).toFixed 2}, #{(readings[1]/100).toFixed 2}, #{readings[2]}\n"
           fs.write @fd_pe, log
+          #/tmp/vermogen.txt
+          fs.writeFile('/tmp/vermogen.txt', "#{(readings[0]/100).toFixed 2}, #{(readings[1]/100).toFixed 2}")
         else if msg[0..1] is 'PG'
           log = "#{ts}, #{readings[0]}, #{(readings[1]/1000).toFixed 3}\n"
           fs.write @fd_pg, log
