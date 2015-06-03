@@ -110,6 +110,7 @@ class P1Logger
         info.group = 178
         info.recvid = 868
         info.id = 30 #use this node id for P1 meter readings
+        info.time = ts
         if msg[0..1] is 'PD'
           info.buffer = new Buffer 37
           info.buffer.writeUInt8 30, 0 #node id

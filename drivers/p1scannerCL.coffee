@@ -85,9 +85,9 @@ module.exports =
   feed: 'rf12.packet'
 
   decode: (raw, cb) ->
-    console.log "p1scannerCL entry"
+    #console.log "p1scannerCL entry"
     type = raw.toString undefined, 1, 3
-    console.log type
+    #console.log type
     if type == 'PD'
       result =
         tag: 'PD'

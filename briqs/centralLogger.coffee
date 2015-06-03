@@ -571,6 +571,7 @@ class centralLogger extends serialport.SerialPort
             if words.length > 1 and (!isNaN words[0]) and words[1][0..1] is 'OK'
               # TODO: conversion to ints can fail if the serial data is garbled
               ts = parseInt words[0]
+              info.time = ts
               info.id = (parseInt words[1][2..3], 16)  & 0x1F
               msg = words[1][2..]
               #console.log ts, info.id, msg
@@ -587,6 +588,7 @@ class centralLogger extends serialport.SerialPort
                 # generate normal packet event, for decoders
                 state.emit 'rf12.packet', info, ainfo[info.id]
             else if words.length > 1 and (!isNaN words[0]) and words[1][0..1] is 'CK'
+              info.time = parseInt words[0]
               ts=Date.now()
               info.id = 31 #use this node id for clock readings centrallogger
               #words[1] = ts
@@ -604,7 +606,10 @@ class centralLogger extends serialport.SerialPort
               state.emit 'rf12.packet', info, ainfo[info.id]
               console.log "ainfo[info.id]"
               console.log ainfo[info.id]
-            else #something other than 'OK...'
+            else if words.length > 1 and (!isNaN words[0]) and (words[1][0..1] is 'PD' or words[1][0..1] is 'PE' or words[1][0..1] is 'PG')
+              #console.log 'PD, PE, PG packets delegated to P1-logger'
+              #ignore
+            else #something other than 'OK, CK, PD, PE, PG'
               match = /^ -> (\d+) b/.exec data   #bytes sent?
               if match #we have results of a send from the mcu in the format ' -> x b' where x is bytes.
                  state.emit 'rf12.sendcomplete', @device, match[1]
