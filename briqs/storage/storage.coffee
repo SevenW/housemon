@@ -5,6 +5,7 @@ db = state.db
 
 archiveValue = (time, param, value) ->
   dbkey = "reading~#{param}~#{time}"
+  #console.log dbkey
   db.put dbkey, value, (err) ->
     throw err  if err
 

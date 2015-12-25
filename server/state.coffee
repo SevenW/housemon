@@ -4,6 +4,7 @@ async = require 'async'
 _ = require 'underscore'
 redis = require 'redis'
 level = require 'level'
+mysqldb = require 'mysql'
 
 db = level './storage', {}, (err) ->
   throw err  if err
@@ -12,6 +13,13 @@ db = level './storage', {}, (err) ->
     db.db.approximateSize ' ', '~', (err, size) ->
       throw err  if err
       console.log 'storage size ~ %d bytes', size
+
+mdb = mysqldb.createConnection(
+  host: 'localhost'
+  user: 'sensors'
+  password: 'sensors'
+  database: 'sensors')
+mdb.connect()
 
 dbo = null
 
@@ -34,6 +42,7 @@ for k,v of process
 
 module.exports = state = new events.EventEmitter2(wildcard: true)
 module.exports.db = db
+module.exports.mdb = mdb
 
 #state.onAny (args...) ->
 #  console.info '>', @event, args...
