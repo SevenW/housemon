@@ -25,7 +25,11 @@
     "underscore": "~1.5.1",
     "semver": "~2.1.0",
     "level": "~0.15.0",
-    "mysql": "~2.10.0"
+    "mysql": "~2.10.0",
+    "morgan": "~1.6.1",
+    "body-parser": "~1.14.2",
+    "serve-index": "~1.7.2",
+    "serve-static": "~1.10.0"
   },
   "devDependencies": {
     "chai": "~1.7.2",
